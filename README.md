@@ -10,7 +10,7 @@ Install using vim-plug:
 
 
 ## Features
-Switch to related application file by pressing <F4>.
+Switch to related application file by pressing F4.
 
     nmap <silent> <F4> :DjangoSwitch<CR>
 
