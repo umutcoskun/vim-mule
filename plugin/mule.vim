@@ -72,11 +72,48 @@ else:
 EOF
 endfunction
 
+function! DjangoSettings()
+python << EOF
+
+import os
+import vim
+
+filename = vim.current.buffer.name
+directory = os.path.dirname(filename)
+ignored = ['static', 'media', 'env', 'venv', '.git']
+
+# Only search parent 3 directories.
+for i in [1, 2, 3]:
+    found = False
+
+    directories = [
+        x for x in os.listdir(directory)
+        if x not in ignored and os.path.isdir(x)
+    ]
+
+    for path in directories:
+        settings = os.path.join(path, 'settings.py')
+        if os.path.isfile(settings):
+            vim.command('edit {}'.format(settings))
+            found = True
+            break
+
+    if found:
+        break
+
+    directory = os.path.dirname(directory)
+
+
+EOF
+endfunction
+
 command DjangoSwitch :call DjangoSwitch()
 command DjangoRunServer :call DjangoRunServer()
+command DjangoSettings :call DjangoSettings()
 
 if !exists('g:mule_no_hotkeys')
     nmap <silent> <F4> :DjangoSwitch<CR>
+    nmap <silent> <F8> :DjangoSettings<CR>
     nmap <silent> <F9> :DjangoRunServer<CR>
 endif
 
