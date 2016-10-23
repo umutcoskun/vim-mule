@@ -51,9 +51,32 @@ if app:
 EOF
 endfunction
 
+function! DjangoRunServer()
+python << EOF
+
+import os
+import vim
+
+filename = vim.current.buffer.name
+directory = os.path.dirname(filename)
+
+# Only search parent 3 directories.
+for i in [1, 2, 3]:
+    manager = os.path.join(directory, 'manage.py')
+    if os.path.isfile(manager):
+        vim.command('!python manage.py runserver')
+    directory = os.path.dirname(directory)
+else:
+    print('manage.py not found.')
+
+EOF
+endfunction
+
 command DjangoSwitch :call DjangoSwitch()
+command DjangoRunServer :call DjangoRunServer()
 
 if !exists('g:mule_no_hotkeys')
     nmap <silent> <F4> :DjangoSwitch<CR>
+    nmap <silent> <F9> :DjangoRunServer<CR>
 endif
 
