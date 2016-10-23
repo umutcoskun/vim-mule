@@ -16,6 +16,10 @@ Switch to related application file by pressing F4.
 
 ![django-switch](http://oi67.tinypic.com/4jx6x1.jpg)
 
+Run test server by pressing F9.
+
+    nmap <silent> <F9> :DjangoRunServer<CR>
+
 ## Customization
 If you dont want to use default hotkeys, define this variable in your .vimrc file:
 
