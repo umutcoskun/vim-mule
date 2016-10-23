@@ -25,7 +25,7 @@ if app:
     # Check, working directory has an init file?
     # To determine its a python applicetion.
     if os.path.isfile(os.path.join(directory, '__init__.py')):
-        menu = ['&views', '&models', '&admin', '&urls', '&tests']
+        menu = ['&views', '&models', '&forms', '&admin', '&urls', '&tests']
         choice = vim.eval('confirm("[{}] Go to related file:", "{}")'.format(
             app,
             '\n'.join(menu)
