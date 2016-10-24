@@ -21,6 +21,7 @@ _You can change default key mappings. See customization section._
 * `:DjangoManage` You can run manage.py commands anywhere in the project  with TAB completion. By pressing F9.
 
 For example: r{TAB} turns into runserver or m{TAB} to makemigrations or mi{TAB} to migrate.
+
 More info: https://docs.djangoproject.com/es/1.10/ref/django-admin/#available-commands
 
 
@@ -34,7 +35,7 @@ Here is the default mappings:
 
     nmap <silent> <F4> :DjangoSwitch<CR>
     nmap <silent> <F8> :DjangoSettings<CR>
-    nmap <silent> <F9> :DjangoManage 
+    nmap <F9> :DjangoManage 
 
 
 :)
