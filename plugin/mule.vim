@@ -132,9 +132,9 @@ function! DjangoManageCompletor(arg, line, pos)
     endfor
 endfunction
 
-autocmd FileType python command DjangoSwitch :call DjangoSwitch()
-autocmd FileType python command DjangoSettings :call DjangoSettings()
-autocmd FileType python command -nargs=1 -complete=custom,DjangoManageCompletor DjangoManage :call DjangoManage(<f-args>)
+autocmd FileType python command! DjangoSwitch :call DjangoSwitch()
+autocmd FileType python command! DjangoSettings :call DjangoSettings()
+autocmd FileType python command! -nargs=1 -complete=custom,DjangoManageCompletor DjangoManage :call DjangoManage(<f-args>)
 
 if !exists('g:mule_no_hotkeys')
     autocmd FileType python nmap <silent> <F4> :DjangoSwitch<CR>
