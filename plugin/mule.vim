@@ -6,13 +6,13 @@ endif
 let g:mule_loaded = 1
 
 " Check python is available.
-if !has('python')
-    echo "Error: Required vim compiled with +python."
+if !has('python3')
+    echo "Error: Required vim compiled with +python3."
     finish
 endif
 
 function! DjangoSwitch()
-python << EOF
+python3 << EOF
 
 import os
 import vim
@@ -53,7 +53,7 @@ endfunction
 
 
 function! DjangoSettings()
-python << EOF
+python3 << EOF
 
 import os
 import vim
@@ -96,7 +96,7 @@ endfunction
 " Runs manage.py functions, anywhere in the project.
 " Parameter is the argument that given by the user.
 function! DjangoManage(command)
-python << EOF
+python3 << EOF
 
 import os
 import vim
