@@ -54,6 +54,12 @@ function! DjangoSwitch()
     let s:target_name = s:choices[s:choice]
     let s:target_path = s:app_path . '/' . s:target_name
     execute ':silent! edit ' . s:target_path
+
+    " Highlight selected file in NERDTree,
+    " If the plugin is installed.
+    if exists(':NERDTreFind')
+        execute ':NERDTreeFind'
+    endif
 endfunction
 
 
