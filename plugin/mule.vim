@@ -1,122 +1,72 @@
 " Check plugin is already loaded.
-if exists('g:mule_loaded')
-    finish
-endif
-
+if exists('g:mule_loaded') | finish | endif
 let g:mule_loaded = 1
 
-" Check python is available.
-if !has('python3')
-    echo "Error: Required vim compiled with +python3."
-    finish
+" Default version to run commands
+let g:mule_python_command = 'python3'
+" Get absolute path of manage.py
+let g:mule_manage_filename = fnamemodify(findfile('manage.py', '.;'), ':p')
+" Root directory of the Django project.
+let g:mule_project_path = ''
+
+" Check manage.py is exists.
+if !empty(glob(g:mule_manage_filename))
+    " Get directory of manage.py and set as project root.
+    let g:mule_project_path = fnamemodify(g:mule_manage_filename, ':h')
+
+    " Get absolue path of the settings.
+    let g:mule_settings_filename = system('find ' . g:mule_project_path . ' -name settings.py')
+else
+    echo 'MULE: Unable to find manage.py'
 endif
 
+" Switches between application files.
 function! DjangoSwitch()
-python3 << EOF
+    " Get absolute directory of current buffer.
+    let s:app_path = expand('%:p:h')
+    " Check current file in an application.
+    let s:is_app_valid = filereadable(s:app_path . '/__init__.py')
 
-import os
-import vim
+    if !s:is_app_valid
+        echo 'You are not in application.'
+        return
+    endif
 
-filename = vim.current.buffer.name
-directory = os.path.dirname(filename)
-app = os.path.basename(directory)
+    " Extract application name from the absolute path.
+    let s:app_name = fnamemodify(s:app_path, ':t')
 
-if app:
-    # Check, working directory has an init file?
-    # To determine its a python applicetion.
-    if os.path.isfile(os.path.join(directory, '__init__.py')):
-        menu = ['&views', '&models', '&forms', '&admin', '&urls', '&tests']
-        choice = vim.eval('confirm("[{}] Go to related file:", "{}")'.format(
-            app,
-            '\n'.join(menu)
-        ))
-        choices = {
-            '1': 'views.py',
-            '2': 'models.py',
-            '3': 'forms.py',
-            '4': 'admin.py',
-            '5': 'urls.py',
-            '6': 'tests.py',
-        }
+    let s:choice = confirm('[' . s:app_name . '] Go to related file:', "&views\n&models\n&forms\n&admin\n&urls\n&tests")
 
-        if choice in choices.keys():
-            selected = choices.get(choice)
-            target = os.path.join(directory, selected)
-            vim.command('edit {}'.format(target))
-        else:
-            print('Option {} is not exists.'.format(choice))
-    else:
-        print('You are not in an application.')
+    " Abort if the user does not select any option.
+    if s:choice == 0
+        return
+    endif
 
-EOF
+    let s:choices = {
+        \ '1': 'views.py',
+        \ '2': 'models.py',
+        \ '3': 'forms.py',
+        \ '4': 'admin.py',
+        \ '5': 'urls.py',
+        \ '6': 'tests.py'
+        \ }
+
+    let s:target_name = s:choices[s:choice]
+    let s:target_path = s:app_path . '/' . s:target_name
+    execute ':silent! edit ' . s:target_path
 endfunction
 
 
+" Opens closest settings.py to the project root.
 function! DjangoSettings()
-python3 << EOF
-
-import os
-import vim
-
-filename = vim.current.buffer.name
-directory = os.path.dirname(filename)
-ignored = ['static', 'media', 'env', 'venv', '.git']
-
-# Only search parent 3 directories.
-for i in [1, 2, 3]:
-    found = False
-
-    # Break if there is no open file in the current buffer.
-    if not directory:
-        break
-
-
-    # Ignore blacklisted directory names.
-    directories = [
-        x for x in os.listdir(directory)
-        if x not in ignored and os.path.isdir(x)
-    ]
-
-    for path in directories:
-        settings = os.path.join(path, 'settings.py')
-        if os.path.isfile(settings):
-            vim.command('edit {}'.format(settings))
-            found = True
-            break
-
-    if found:
-        break
-
-    directory = os.path.dirname(directory)
-
-
-EOF
+    execute 'edit ' . g:mule_settings_filename
 endfunction
 
-" Runs manage.py functions, anywhere in the project.
-" Parameter is the argument that given by the user.
+" Runs manage.py with the given arguments.
 function! DjangoManage(command)
-python3 << EOF
-
-import os
-import vim
-
-filename = vim.current.buffer.name
-directory = os.path.dirname(filename)
-
-# Only search parent 3 directories.
-for i in [1, 2, 3]:
-    manager = os.path.join(directory, 'manage.py')
-    if os.path.isfile(manager):
-        command = vim.eval('a:command')
-        vim.command('!python manage.py {}'.format(command))
-        break
-    directory = os.path.dirname(directory)
-else:
-    print('manage.py not found.')
-
-EOF
+    execute '!' . g:mule_python_command . ' ' . g:mule_manage_filename . ' ' . a:command
 endfunction
+" Command line completor for DjangoManage function.
 function! DjangoManageCompletor(arg, line, pos)
     let s:items = [
         \'check', 'compilemessages', 'createcachetable', 'dbshell', 'dumpdata',
@@ -132,9 +82,9 @@ function! DjangoManageCompletor(arg, line, pos)
     endfor
 endfunction
 
-autocmd FileType python command! DjangoSwitch :call DjangoSwitch()
-autocmd FileType python command! DjangoSettings :call DjangoSettings()
-autocmd FileType python command! -nargs=1 -complete=custom,DjangoManageCompletor DjangoManage :call DjangoManage(<f-args>)
+command! DjangoSwitch :call DjangoSwitch()
+command! DjangoSettings :call DjangoSettings()
+command! -nargs=1 -complete=custom,DjangoManageCompletor DjangoManage :call DjangoManage(<f-args>)
 
 if !exists('g:mule_no_hotkeys')
     autocmd FileType python nmap <silent> <F4> :DjangoSwitch<CR>

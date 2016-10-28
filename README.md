@@ -26,9 +26,15 @@ More info: https://docs.djangoproject.com/es/1.10/ref/django-admin/#available-co
 
 
 ## Customization
+Here is the defeault options that you can change:
+
+    let g:mule_python_command = 'python3'
+
 If you dont want to use default hotkeys, define this variable in your .vimrc file:
 
     let g:mule_no_hotkeys = 1
+
+Hotkeys are auto mapping for only python filetype.
 
 
 Here is the default mappings:
