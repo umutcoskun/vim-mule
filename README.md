@@ -24,6 +24,17 @@ For example: r{TAB} turns into runserver or m{TAB} to makemigrations or mi{TAB} 
 
 More info: https://docs.djangoproject.com/es/1.10/ref/django-admin/#available-commands
 
+### Quick Jump Commands
+Jump commands are goes to commonly used files in spesific applications.
+_You can auto complete application name with TAB._
+
+* `:DjangoViews [app]` Jumps to app's views.py
+* `:DjangoModels [app]` Jumps to app's models.py
+* `:DjangoForms [app]` Jumps to app's forms.py
+* `:DjangoAdmin [app]` Jumps to app's admin.py
+* `:DjangoUrls [app]` Jumps to urls.py
+* `:DjangoTests [app]` Jumps to tests.py
+
 
 ## Customization
 Here is the defeault options that you can change:
