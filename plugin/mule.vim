@@ -20,6 +20,14 @@ else
     echo 'MULE: Unable to find manage.py'
 endif
 
+" Highlight selected file in NERDTree,
+" If the plugin is installed.
+function! RefreshNERDTree()
+    if exists(':NERDTreFind')
+        execute ':NERDTreeFind'
+    endif
+endfunction
+
 " Switches between application files.
 function! DjangoSwitch()
     " Get absolute directory of current buffer.
@@ -55,11 +63,7 @@ function! DjangoSwitch()
     let s:target_path = s:app_path . '/' . s:target_name
     execute ':silent! edit ' . s:target_path
 
-    " Highlight selected file in NERDTree,
-    " If the plugin is installed.
-    if exists(':NERDTreFind')
-        execute ':NERDTreeFind'
-    endif
+    execute ':silent! call RefreshNERDTree()'
 endfunction
 
 
@@ -88,9 +92,50 @@ function! DjangoManageCompletor(arg, line, pos)
     endfor
 endfunction
 
+
+function! IsApplication(idx, path)
+    return filereadable(fnamemodify(a:path, ':p:h') . '/__init__.py')
+endfunction
+
+function! DjangoJump(command, app)
+    let s:app_path = g:mule_project_path . '/' . a:app
+
+    " Check given argument is a real application.
+    if !IsApplication(0, s:app_path)
+        echo 'There is no application named: ' . a:app
+        return
+    endif
+
+    execute ':silent! edit ' . s:app_path . '/' . a:command . '.py'
+    execute ':silent! call RefreshNERDTree()'
+endfunction
+" Command line completor for DjangoJump function
+function! DjangoJumpCompletor(arg, line, pos)
+    " Get sub directories of the project root.
+    let s:dirs = filter(split(globpath(g:mule_project_path, '*'), '\n'),'isdirectory(v:val)')
+    " Check sub directories are they application?
+    let s:apps = filter(s:dirs, function('IsApplication'))
+
+    for app_path in s:apps
+        " Get directory name as application name.
+        let l:app_name = fnamemodify(app_path, ':p:h:t')
+        " Check item is starts with argument.
+        if l:app_name =~ '^' . a:arg
+            return l:app_name
+        endif
+    endfor
+endfunction
+
 command! DjangoSwitch :call DjangoSwitch()
 command! DjangoSettings :call DjangoSettings()
 command! -nargs=1 -complete=custom,DjangoManageCompletor DjangoManage :call DjangoManage(<f-args>)
+command! -nargs=1 -complete=custom,DjangoJumpCompletor DjangoViews :call DjangoJump('views', <f-args>)
+command! -nargs=1 -complete=custom,DjangoJumpCompletor DjangoModels :call DjangoJump('models', <f-args>)
+command! -nargs=1 -complete=custom,DjangoJumpCompletor DjangoForms :call DjangoJump('forms', <f-args>)
+command! -nargs=1 -complete=custom,DjangoJumpCompletor DjangoAdmin :call DjangoJump('admin', <f-args>)
+command! -nargs=1 -complete=custom,DjangoJumpCompletor DjangoUrls :call DjangoJump('urls', <f-args>)
+command! -nargs=1 -complete=custom,DjangoJumpCompletor DjangoTests :call DjangoJump('tests', <f-args>)
+
 
 if !exists('g:mule_no_hotkeys')
     autocmd FileType python nmap <silent> <F4> :DjangoSwitch<CR>
