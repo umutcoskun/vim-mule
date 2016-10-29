@@ -60,7 +60,7 @@ let g:mule_auto_env = 1
 
 " Only set if you don't want auto hotkey mappings.
 " Hotkeys will mapped for only python filetype.
-" let g:mule_no_hotkeys = 1
+let g:mule_no_hotkeys = 1
 ```
 
 Here is the default mappings if auto hotkeys enabled:
