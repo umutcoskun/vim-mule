@@ -20,6 +20,28 @@ else
     echo 'MULE: Unable to find manage.py'
 endif
 
+
+" Try to activate virtual environment when execute manage.py commands.
+" If not set, open by default.
+if !exists('g:mule_auto_env')
+    let g:mule_auto_env = 1
+endif
+
+if exists('g:mule_auto_env')
+    " If user allow auto environment.
+    if g:mule_auto_env != 0
+        " Get parent directory of the project root.
+        let s:mule_project_parent = fnamemodify(g:mule_project_path, ':h:p')
+        " Search for `activate` binary, to activate virtual environment.
+        let g:mule_virtual_env = system('find ' . s:mule_project_parent . ' -name activate')
+
+        " Delete variable if virtual environment does not found.
+        if g:mule_virtual_env == ''
+            unlet g:mule_virtual_env
+        endif
+    endif
+endif
+
 " Highlight selected file in NERDTree,
 " If the plugin is installed.
 function! RefreshNERDTree()
@@ -73,8 +95,24 @@ function! DjangoSettings()
 endfunction
 
 " Runs manage.py with the given arguments.
+" And tries to activate virtual environment.
 function! DjangoManage(command)
-    execute '!' . g:mule_python_command . ' ' . g:mule_manage_filename . ' ' . a:command
+    " Build full manage command.
+    " e.g python3 manage.p runserver.
+    let l:line = g:mule_python_command . ' ' . g:mule_manage_filename . ' ' . a:command
+    " If user is not inside of any virtual envrionment.
+    if !exists($VIRTUAL_ENV)
+        " If user let the activate auto activate virtual environment,
+        " And vim-plug can find `activate` binary.
+        if exists('g:mule_auto_env') && exists('g:mule_virtual_env')
+            " Add virtual environment activation command to full command.
+            let l:line = 'source ' . g:mule_virtual_env . ' && ' . l:line
+            " Remove new line character from the command line.
+            let l:line = substitute(l:line, '\n', '\1', '')
+        endif
+    endif
+    " Finally, run command.
+    execute '!' . l:line
 endfunction
 " Command line completor for DjangoManage function.
 function! DjangoManageCompletor(arg, line, pos)

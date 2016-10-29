@@ -24,6 +24,13 @@ For example: r{TAB} turns into runserver or m{TAB} to makemigrations or mi{TAB} 
 
 More info: https://docs.djangoproject.com/es/1.10/ref/django-admin/#available-commands
 
+* When you run a `:DjangoManage` command and if you are not in a virtual environment, vim-mule activates projects `virtual environment` (usually, in the parent directory of the project root) just for the command. Then you will no suprised with ImportError.
+
+If you want to disable auto environment, in your .vimrc:
+
+    let g:mule_auto_env = 0
+
+
 ### Quick Jump Commands
 Jump commands are goes to commonly used files in spesific applications.
 _You can auto complete application name with TAB._
