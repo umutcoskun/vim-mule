@@ -50,23 +50,26 @@ _You can auto complete application name with TAB._
 ## Customization
 Here is the defeault options that you can change:
 
-    " Selected interpreter to run commands.
-    let g:mule_python_command = 'python3'
+```viml
+" Selected interpreter to run commands.
+let g:mule_python_command = 'python3'
 
-    " Auto enable virtual environment.
-    " If you don't want, set it to 0 (zero).
-    let g:mule_auto_env = 1
+" Auto enable virtual environment.
+" If you don't want, set it to 0 (zero).
+let g:mule_auto_env = 1
 
-    " Only set if you don't want auto hotkey mappings.
-    " Hotkeys will mapped for only python filetype.
-    " let g:mule_no_hotkeys = 1
-
+" Only set if you don't want auto hotkey mappings.
+" Hotkeys will mapped for only python filetype.
+" let g:mule_no_hotkeys = 1
+```
 
 Here is the default mappings if auto hotkeys enabled:
 
-    nmap <silent> <F4> :DjangoSwitch<CR>
-    nmap <silent> <F8> :DjangoSettings<CR>
-    nmap <F9> :DjangoManage 
+```viml
+nmap <silent> <F4> :DjangoSwitch<CR>
+nmap <silent> <F8> :DjangoSettings<CR>
+nmap <F9> :DjangoManage 
+```
 
 
 **Pull requests are welcome!**
