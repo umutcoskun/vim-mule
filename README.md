@@ -34,11 +34,17 @@ _You can auto complete application name with TAB._
 
 
 ## Installation
-* Install using **vim-plug**: `Plug 'umutcoskun/vim-mule'`
+* Install using **vim-plug**:
 
-* Install using **Vundle**: `Plugin 'umutcoskun/vim-mule'`
+    `Plug 'umutcoskun/vim-mule'`
 
-* Install using **Pathogen**: `cd ~/.vim/bundle && git clone https://github.com/umutcoskun/vim-mule.git`
+* Install using **Vundle**:
+
+    `Plugin 'umutcoskun/vim-mule'`
+
+* Install using **Pathogen**:
+
+    `cd ~/.vim/bundle && git clone https://github.com/umutcoskun/vim-mule.git`
 
 
 ## Customization
