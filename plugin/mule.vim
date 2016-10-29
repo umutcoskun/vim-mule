@@ -97,17 +97,22 @@ function! IsApplication(idx, path)
     return filereadable(fnamemodify(a:path, ':p:h') . '/__init__.py')
 endfunction
 
-function! DjangoJump(command, app)
-    let s:app_path = g:mule_project_path . '/' . a:app
+function! DjangoJump(...)
+    let l:command = a:1
+    let l:app_name = a:2
 
-    " Check given argument is a real application.
-    if !IsApplication(0, s:app_path)
-        echo 'There is no application named: ' . a:app
-        return
+    if a:0 > 1
+        let s:app_path = g:mule_project_path . '/' . l:app_name
+
+        " Check given argument is a real application.
+        if !IsApplication(0, s:app_path)
+            echo 'There is no application named: ' . l:app_name
+            return
+        endif
+
+        execute ':silent! edit ' . s:app_path . '/' . l:command . '.py'
+        execute ':silent! call RefreshNERDTree()'
     endif
-
-    execute ':silent! edit ' . s:app_path . '/' . a:command . '.py'
-    execute ':silent! call RefreshNERDTree()'
 endfunction
 " Command line completor for DjangoJump function
 function! DjangoJumpCompletor(arg, line, pos)
