@@ -27,6 +27,11 @@ if !exists('g:mule_auto_env')
     let g:mule_auto_env = 1
 endif
 
+" If user does not set, auto mappings are True by default.
+if !exists('g:mule_no_hotkeys')
+    let g:mule_no_hotkeys = 0
+endif
+
 if exists('g:mule_auto_env')
     " If user allow auto environment.
     if g:mule_auto_env != 0
@@ -180,7 +185,8 @@ command! -nargs=1 -complete=custom,DjangoJumpCompletor DjangoUrls :call DjangoJu
 command! -nargs=1 -complete=custom,DjangoJumpCompletor DjangoTests :call DjangoJump('tests', <f-args>)
 
 
-if !exists('g:mule_no_hotkeys')
+" If user allow auto mappings.
+if g:mule_no_hotkeys != 1
     autocmd FileType python nmap <silent> <F4> :DjangoSwitch<CR>
     autocmd FileType python nmap <silent> <F8> :DjangoSettings<CR>
 
