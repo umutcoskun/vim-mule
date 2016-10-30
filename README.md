@@ -18,6 +18,8 @@ _You can change default key mappings. See customization section._
 
 * **Virtual Environment Support:** When you run a `:DjangoManage` command and if you are not in a virtual environment, vim-mule activates projects virtual environment (usually, in the parent directory of the project root) just for the command. Then you will no suprised with ImportError.
 
+* `:DjangoTemplates` Lists all the templates in the project in a quick fix window. By pressing F6. Requires [kien/ctrlp.vim](https://github.com/kien/ctrlp.vim).
+
 
 
 ### Quick Jump Commands
@@ -61,12 +63,16 @@ let g:mule_auto_env = 1
 " Only set if you don't want auto hotkey mappings.
 " Hotkeys will mapped for only python filetype.
 let g:mule_no_hotkeys = 1
+
+" Uses CtrlP to list templates.
+let g:mule_use_ctrlp = 1
 ```
 
 Here is the default mappings if auto hotkeys enabled:
 
 ```viml
 nmap <silent> <F4> :DjangoSwitch<CR>
+nmap <silent> <F4> :DjangoTemplates<CR>
 nmap <silent> <F8> :DjangoSettings<CR>
 nmap <F9> :DjangoManage 
 ```
