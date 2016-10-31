@@ -18,7 +18,7 @@ _You can change default key mappings. See customization section._
 
 * **Virtual Environment Support:** When you run a `:DjangoManage` command and if you are not in a virtual environment, vim-mule activates projects virtual environment (usually, in the parent directory of the project root) just for the command. Then you will no suprised with ImportError.
 
-* `:DjangoTemplates` Lists all the templates in the project in a quick fix window. By pressing F6. Requires [kien/ctrlp.vim](https://github.com/kien/ctrlp.vim).
+* `:DjangoTemplates` Lists all the templates in the project in a quick fix window. By pressing F6. Requires [ctrlpvim/ctrlp.vim](https://github.com/ctrlpvim/ctrlp.vim).
 
 
 
