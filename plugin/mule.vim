@@ -75,7 +75,7 @@ function! DjangoSwitch()
     " Extract application name from the absolute path.
     let s:app_name = fnamemodify(s:app_path, ':t')
 
-    let s:choice = confirm('[' . s:app_name . '] Go to related file:', "&views\n&models\n&forms\n&admin\n&urls\n&tests")
+    let s:choice = confirm('[' . s:app_name . '] Go to related file:', "&views\n&models\n&forms\n&admin\n&urls\n&tests\n&managers\n&serializers")
 
     " Abort if the user does not select any option.
     if s:choice == 0
@@ -88,7 +88,9 @@ function! DjangoSwitch()
         \ '3': 'forms.py',
         \ '4': 'admin.py',
         \ '5': 'urls.py',
-        \ '6': 'tests.py'
+        \ '6': 'tests.py',
+        \ '7': 'managers.py',
+        \ '8': 'serializers.py'
         \ }
 
     let s:target_name = s:choices[s:choice]
