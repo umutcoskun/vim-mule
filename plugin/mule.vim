@@ -47,9 +47,9 @@ if exists('g:mule_auto_env')
     endif
 endif
 
-" Try to use CtrlP to jump to templates, by default.
-if !exists('g:mule_use_ctrlp')
-    let g:mule_use_ctrlp = 1
+" Try to use CtrlP or FzF to jump to templates, by default.
+if !exists('g:mule_use_ctrlp_or_fzf')
+    let g:mule_use_ctrlp_or_fzf = 1
 endif
 
 " Highlight selected file in NERDTree,
@@ -132,7 +132,7 @@ function! DjangoManageCompletor(arg, line, pos)
         \'check', 'compilemessages', 'createcachetable', 'dbshell', 'dumpdata',
         \'diffmessages', 'flush', 'inspectdb', 'loaddata', 'makemigrations', 'test', 'testserver',
         \'makemessages', 'migrate', 'runserver', 'startapp', 'startproject', 'showmigrations', 'sendtestmail', 'shell',
-        \'sqlflush', 'sqlmigrate', 'sqlsequencereset', 'squashmigrations'
+        \'sqlflush', 'sqlmigrate', 'sqlsequencereset', 'squashmigrations',
     \]
     for item in s:items
         " Check item is starts with argument.
@@ -182,12 +182,12 @@ function! DjangoJumpCompletor(arg, line, pos)
 endfunction
 
 " Tries to find 'templates' directory,
-" And executes CtrlP command with this directory as root.
-function! DjangoTemplates()
+" And executes CtrlP or FzF command with this directory as root.
+function! DjangoTemplates(command)
     let g:mule_templates_path = g:mule_project_path . '/templates'
     " Check templates directory is exists.
     if isdirectory(g:mule_templates_path)
-        execute ':CtrlP ' . g:mule_templates_path
+        execute ':' . a:command . ' ' . g:mule_templates_path
     else
         echo 'Templates directory not found.'
     endif
@@ -203,10 +203,14 @@ command! -nargs=1 -complete=custom,DjangoJumpCompletor DjangoAdmin :call DjangoJ
 command! -nargs=1 -complete=custom,DjangoJumpCompletor DjangoUrls :call DjangoJump('urls', <f-args>)
 command! -nargs=1 -complete=custom,DjangoJumpCompletor DjangoTests :call DjangoJump('tests', <f-args>)
 
-" Check CtrlP is installed.
+" Check CtrlP or FzF is installed.
 " And user is allowed to use it.
-if exists(':CtrlP') && g:mule_use_ctrlp != 0
-    command! DjangoTemplates :call DjangoTemplates()
+if g:mule_use_ctrlp_or_fzf != 0
+    if exists(':CtrlP')
+        command! DjangoTemplates :call DjangoTemplates("CtrlP")
+    elseif exists(':Files')
+        command! DjangoTemplates :call DjangoTemplates("Files")
+    endif
 endif
 
 
